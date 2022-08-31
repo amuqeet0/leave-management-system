@@ -90,35 +90,16 @@ Object.assign(UserSchema.statics, { accountTypes, staffTypes });
 
 module.exports = User = mongoose.model("users", UserSchema);
 
-// if (User.findOne({ staffId: "101" })) {
-//   console.log("user already exist");
-// } else {
-//   console.log("admin is being created...");
-//   const admin = new User({
-//     staffId: "101",
-//     name: "admin",
-//     designation: "ADMIN",
-//     category: "idk",
-//     email: "admin@admin.com",
-//     password: bcrypt.hashSync("admin123", 10),
-//     accountType: "ADMIN",
-//     activated: true,
-//     staffType: "RT",
-//   });
+const admin = new User({
+  staffId: "101",
+  name: "admin",
+  designation: "ADMIN",
+  category: "idk",
+  email: "admin@admin.com",
+  password: bcrypt.hashSync("admin123", 10),
+  accountType: "ADMIN",
+  activated: true,
+  staffType: "ADMIN",
+});
 
-//   admin.save();
-// }
-
-// const admin = new User({
-//   staffId: "101",
-//   name: "admin",
-//   designation: "ADMIN",
-//   category: "idk",
-//   email: "admin@admin.com",
-//   password: bcrypt.hashSync("admin123", 10),
-//   accountType: "ADMIN",
-//   activated: true,
-//   staffType: "RT",
-// });
-
-// admin.save();
+admin.save();

@@ -11,7 +11,6 @@ const Footer = (props) => {
           : `${styles.footer} ${styles.footerAltColors}`
       }
     >
-      <div>|</div>
       <div>
         <a
           title="GitHub repo"
