@@ -7,7 +7,7 @@
 </h1>
 
 <div align="center">
-  a Leave Management System for the Department of Information Science &amp; Technology, College of Engineering Guindy, Chennai.
+  Leave Management System
 </div>
 
 <div align="right">
