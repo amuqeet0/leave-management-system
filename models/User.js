@@ -1,6 +1,7 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
-const { accountTypes, staffTypes } = require('../data');
+const { accountTypes, staffTypes } = require("../data");
 
 //account type
 //0 -- admin
@@ -27,64 +28,97 @@ const UserSchema = new Schema(
     staffId: {
       type: String,
       unique: true,
-      required: true
+      required: true,
     },
     name: {
       type: String,
-      required: true
+      required: true,
     },
     designation: {
       type: String,
-      required: true
+      required: true,
     },
     category: {
       type: String,
-      required: true
+      required: true,
     },
     email: {
       type: String,
-      default: 'example@example.com',
-      required: true
+      default: "example@example.com",
+      required: true,
     },
     password: {
       type: String,
       default: `${Math.floor(Math.random() * 90000) + 10000}`,
-      required: true
+      required: true,
     },
     accountType: {
       type: String,
       enum: Object.values(accountTypes),
-      default: accountTypes.STAFF
+      default: accountTypes.STAFF,
     },
     activated: {
       type: Boolean,
       default: false,
-      required: true
+      required: true,
     },
     staffType: {
       type: String,
-      enum: Object.values(staffTypes)
+      enum: Object.values(staffTypes),
     },
     OTToken: {
       type: String,
-      default: ''
+      default: "",
     },
     resetPasswordToken: {
       type: String,
-      default: ''
+      default: "",
     },
     resetPasswordExpires: {
       type: Number,
-      default: -1
+      default: -1,
     },
     pwdResetTime: {
       type: Number,
-      default: -1
-    }
+      default: -1,
+    },
   },
   { minimize: false }
 );
 
 Object.assign(UserSchema.statics, { accountTypes, staffTypes });
 
-module.exports = User = mongoose.model('users', UserSchema);
+module.exports = User = mongoose.model("users", UserSchema);
+
+// if (User.findOne({ staffId: "101" })) {
+//   console.log("user already exist");
+// } else {
+//   console.log("admin is being created...");
+//   const admin = new User({
+//     staffId: "101",
+//     name: "admin",
+//     designation: "ADMIN",
+//     category: "idk",
+//     email: "admin@admin.com",
+//     password: bcrypt.hashSync("admin123", 10),
+//     accountType: "ADMIN",
+//     activated: true,
+//     staffType: "RT",
+//   });
+
+//   admin.save();
+// }
+
+// const admin = new User({
+//   staffId: "101",
+//   name: "admin",
+//   designation: "ADMIN",
+//   category: "idk",
+//   email: "admin@admin.com",
+//   password: bcrypt.hashSync("admin123", 10),
+//   accountType: "ADMIN",
+//   activated: true,
+//   staffType: "RT",
+// });
+
+// admin.save();

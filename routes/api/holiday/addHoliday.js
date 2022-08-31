@@ -1,6 +1,6 @@
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require("express-validator");
 
-const Holiday = require('../../../models/Holiday');
+const Holiday = require("../../../models/Holiday");
 
 const addHoliday = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -9,21 +9,21 @@ const addHoliday = (req, res) => {
   }
 
   Holiday.findOne({
-    date: req.body.date
-  }).then(holidayObj => {
+    date: req.body.date,
+  }).then((holidayObj) => {
     if (holidayObj) {
-      errors.date = 'Holiday already exists';
+      errors.date = "Holiday already exists";
       return res.status(400).json(errors);
     } else {
       const newHoliday = new Holiday({
         date: req.body.date,
         description: req.body.description,
-        holidayType: req.body.holidayType
+        holidayType: req.body.holidayType,
       });
       newHoliday
         .save()
-        .then(classObj => res.json('success'))
-        .catch(err => console.log(err));
+        .then((classObj) => res.json("success"))
+        .catch((err) => console.log(err));
     }
   });
 };

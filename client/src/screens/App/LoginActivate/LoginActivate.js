@@ -1,29 +1,29 @@
-import React, { Component } from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import styles from '../shared/styles/LandingForm.module.scss';
-import { ButtonSubmit, ButtonLink } from '../shared/common/Button';
-import { Footer } from '../shared/components/Footer';
-import { TextBox } from '../shared/common/FormInput';
+import React, { Component } from "react";
+import { Link, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
+import styles from "../shared/styles/LandingForm.module.scss";
+import { ButtonSubmit, ButtonLink } from "../shared/common/Button";
+import { Footer } from "../shared/components/Footer";
+import { TextBox } from "../shared/common/FormInput";
 
 class LoginActivate extends Component {
   state = {
     isSubmitting: false,
-    email: '',
-    password: '',
-    password2: '',
-    staffId: '',
+    email: "",
+    password: "",
+    password2: "",
+    staffId: "",
     transitionEnd: false,
-    errors: {}
+    errors: {},
   };
 
   componentDidMount = () => {
     if (!this.props.auth.isAuthenticated) {
-      if (typeof this.emailInput !== 'undefined')
+      if (typeof this.emailInput !== "undefined")
         setTimeout(() => {
           this.emailInput.setFocus();
         }, 250);
-      if (typeof this.staffIdInput !== 'undefined')
+      if (typeof this.staffIdInput !== "undefined")
         setTimeout(() => {
           this.staffIdInput.setFocus();
         }, 250);
@@ -32,32 +32,32 @@ class LoginActivate extends Component {
     setTimeout(() => {
       this.setState({
         ...this.state,
-        transitionEnd: true
+        transitionEnd: true,
       });
     }, 0);
   };
 
-  componentWillReceiveProps = nextProps => {
+  componentWillReceiveProps = (nextProps) => {
     if (nextProps.errors) {
       this.setState({
         ...this.state,
         errors: nextProps.errors,
-        isSubmitting: false
+        isSubmitting: false,
       });
     }
   };
 
-  inputOnChangeHandler = event => {
-    if (event.target.name === 'email')
+  inputOnChangeHandler = (event) => {
+    if (event.target.name === "email")
       this.setState({
         ...this.state,
-        [event.target.name]: event.target.value.toLowerCase()
+        [event.target.name]: event.target.value.toLowerCase(),
       });
     else
       this.setState({ ...this.state, [event.target.name]: event.target.value });
   };
 
-  activateSubmitHandler = event => {
+  activateSubmitHandler = (event) => {
     this.setState({ ...this.state, isSubmitting: true });
     event.preventDefault();
 
@@ -65,55 +65,55 @@ class LoginActivate extends Component {
       email: this.state.email,
       staffId: this.state.staffId,
       password: this.state.password,
-      password2: this.state.password2
+      password2: this.state.password2,
     };
 
     const newProfile = {
       staffId: this.state.staffId,
       prevLogins: {},
       cplCredits: 0,
-      leaveAllotted: {}
+      leaveAllotted: {},
     };
 
     this.props.activateUser(newUser, newProfile).then(() => {
       this.setState(
         {
           ...this.state,
-          staffId: '',
-          email: '',
-          password: '',
-          password2: '',
+          staffId: "",
+          email: "",
+          password: "",
+          password2: "",
           errors: {},
-          isSubmitting: false
+          isSubmitting: false,
         },
         () => {
           this.props.showPopout({
-            type: 'modalSingleButton',
-            title: 'Action successful',
-            message: 'Account successfully activated.',
+            type: "modalSingleButton",
+            title: "Action successful",
+            message: "Account successfully activated.",
             buttonPrimary: true,
-            buttonContent: 'Okay'
+            buttonContent: "Okay",
           });
-          this.props.history.push('/login');
+          this.props.history.push("/login");
         }
       );
     });
   };
 
-  forgotPasswordHandler = event => {
+  forgotPasswordHandler = (event) => {
     event.preventDefault();
     const state = this.state;
     this.setState({ ...state, isSubmitting: true });
     this.props.sendResetEmail({ email: state.email }).then(() => {
       this.props.showPopout({
-        type: 'modalSingleButton',
-        title: 'Instructions Sent',
+        type: "modalSingleButton",
+        title: "Instructions Sent",
         message:
-          'We sent instructions to change your password to ' +
+          "We sent instructions to change your password to " +
           state.email +
-          ', please check both your inbox & spam folder.',
+          ", please check both your inbox & spam folder.",
         buttonPrimary: true,
-        buttonContent: 'Okay'
+        buttonContent: "Okay",
       });
     });
   };
@@ -122,7 +122,7 @@ class LoginActivate extends Component {
     this.props.clearErrors();
   };
 
-  loginSubmitHandler = event => {
+  loginSubmitHandler = (event) => {
     event.preventDefault();
     const state = this.state;
     const { location } = this.props;
@@ -130,7 +130,7 @@ class LoginActivate extends Component {
     this.props.loginUser(
       { email: state.email, password: state.password },
       this.props.history,
-      typeof location.state === 'undefined'
+      typeof location.state === "undefined"
         ? undefined
         : location.state.destination
     );
@@ -144,7 +144,7 @@ class LoginActivate extends Component {
     if (isAuthenticated) return <Redirect to="/dashboard" />;
 
     let toRender = null;
-    if (match.path === '/login') {
+    if (match.path === "/login") {
       toRender = (
         <div
           id="authbox"
@@ -152,7 +152,8 @@ class LoginActivate extends Component {
             this.state.transitionEnd
               ? `${styles.authbox} ${styles.authboxTransitionEnd}`
               : styles.authbox
-          }>
+          }
+        >
           <div className={styles.logo}>
             <Link to="/">LMS</Link>
           </div>
@@ -168,7 +169,7 @@ class LoginActivate extends Component {
               value={this.state.email}
               inputOnChangeHandler={this.inputOnChangeHandler}
               errors={errors.email}
-              ref={input => {
+              ref={(input) => {
                 this.emailInput = input;
               }}
               containerStyles={styles.marginBottom20}
@@ -184,13 +185,15 @@ class LoginActivate extends Component {
             />
             <ButtonLink
               className={styles.marginBottom20}
-              onClick={this.forgotPasswordHandler}>
+              onClick={this.forgotPasswordHandler}
+            >
               Forgot your password?
             </ButtonLink>
             <ButtonSubmit
               className={styles.marginBottom8}
               isLoading={this.state.isSubmitting}
-              style={{ width: '100%' }}>
+              style={{ width: "100%" }}
+            >
               Login
             </ButtonSubmit>
             <div className={styles.marginTop4}>
@@ -201,12 +204,13 @@ class LoginActivate extends Component {
                   this.setState({
                     ...this.state,
                     transitionEnd: false,
-                    path: '/activate'
+                    path: "/activate",
                   });
-                  history.push('/activate');
+                  history.push("/activate");
                   this.forceUpdate();
                 }}
-                isSmall={true}>
+                isSmall={true}
+              >
                 Activate here
               </ButtonLink>
             </div>
@@ -221,7 +225,8 @@ class LoginActivate extends Component {
             this.state.transitionEnd
               ? `${styles.authbox} ${styles.authboxTransitionEnd}`
               : styles.authbox
-          }>
+          }
+        >
           <div className={styles.logo}>
             <Link to="/">LMS</Link>
           </div>
@@ -237,7 +242,7 @@ class LoginActivate extends Component {
               description="Enter Staff ID provided by the administrator."
               inputOnChangeHandler={this.inputOnChangeHandler}
               errors={errors.staffId}
-              ref={input => {
+              ref={(input) => {
                 this.staffIdInput = input;
               }}
               value={this.state.staffId}
@@ -275,7 +280,8 @@ class LoginActivate extends Component {
             <ButtonSubmit
               className={styles.marginBottom8}
               isLoading={this.state.isSubmitting}
-              style={{ width: '100%' }}>
+              style={{ width: "100%" }}
+            >
               Activate
             </ButtonSubmit>
             <div className={styles.marginTop4}>
@@ -288,12 +294,13 @@ class LoginActivate extends Component {
                   this.setState({
                     ...this.state,
                     transitionEnd: false,
-                    path: '/login'
+                    path: "/login",
                   });
                   this.forceUpdate();
-                  history.push('/login');
+                  history.push("/login");
                 }}
-                isSmall={true}>
+                isSmall={true}
+              >
                 Login here
               </ButtonLink>
             </div>
@@ -327,7 +334,7 @@ LoginActivate.propTypes = {
   loginUser: PropTypes.func.isRequired,
   sendResetEmail: PropTypes.func.isRequired,
   setLoginAttempts: PropTypes.func.isRequired,
-  activateUser: PropTypes.func.isRequired
+  activateUser: PropTypes.func.isRequired,
 };
 
 export default LoginActivate;

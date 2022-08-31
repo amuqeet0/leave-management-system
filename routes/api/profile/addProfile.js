@@ -1,7 +1,7 @@
-const { validationResult } = require('express-validator/check');
-const User = require('../../../models/User');
-const Profile = require('../../../models/Profile');
-const LeaveAllocation = require('../../../models/LeaveAllocation');
+const { validationResult } = require("express-validator");
+const User = require("../../../models/User");
+const Profile = require("../../../models/Profile");
+const LeaveAllocation = require("../../../models/LeaveAllocation");
 
 const addProfile = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -10,7 +10,7 @@ const addProfile = (req, res) => {
   }
 
   User.findOne({ staffId: req.body.staffId })
-    .then(user => {
+    .then((user) => {
       if (user) {
         //0 - dummy category
         //1 - casual leave - 12
@@ -59,14 +59,14 @@ const addProfile = (req, res) => {
         //6 -- research scholars - others (6 days) -- rso -- od, cl30
         //7 -- others -- oth
         LeaveAllocation.findOne({ staffType: user.staffType })
-          .populate('leaveTypesAllowed')
-          .then(allocation => {
+          .populate("leaveTypesAllowed")
+          .then((allocation) => {
             if (allocation) {
               let leaveAvailed = allocation.leaveTypesAllowed.map(
-                leaveTypes => {
+                (leaveTypes) => {
                   return {
                     leaveType: leaveTypes.leaveType,
-                    noOfDays: 0
+                    noOfDays: 0,
                   };
                 }
               );
@@ -74,23 +74,23 @@ const addProfile = (req, res) => {
                 user: user.id,
                 staffId: user.staffId,
                 leaveAllocation: allocation._id,
-                leaveAvailed
+                leaveAvailed,
               });
               profileFields
                 .save()
-                .then(profile => res.status(200).json('success'))
-                .catch(err => {
+                .then((profile) => res.status(200).json("success"))
+                .catch((err) => {
                   console.log(err);
                   res.status(400).json(err);
                 });
             }
           });
       } else {
-        errors.msg = 'Staff not found';
+        errors.msg = "Staff not found";
         res.status(404).json(errors);
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(404).json(err);
     });

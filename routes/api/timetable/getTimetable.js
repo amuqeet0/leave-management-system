@@ -1,5 +1,5 @@
-const { validationResult } = require('express-validator/check');
-const { getTimetableEntries } = require('../../utils');
+const { validationResult } = require("express-validator");
+const { getTimetableEntries } = require("../../utils");
 
 const getTimetable = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -7,7 +7,7 @@ const getTimetable = (req, res) => {
     return res.status(400).json(errors.mapped());
   }
 
-  getTimetableEntries(req.query.classId).then(result => {
+  getTimetableEntries(req.query.classId).then((result) => {
     return res.status(200).json(result);
   });
 };

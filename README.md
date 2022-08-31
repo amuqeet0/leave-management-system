@@ -7,7 +7,7 @@
 </h1>
 
 <div align="center">
-  Leave Management System
+  a Leave Management System for the Department of Information Science &amp; Technology, College of Engineering Guindy, Chennai.
 </div>
 
 <div align="right">
@@ -15,6 +15,11 @@
     Illustration Credits - <a href="https://www.svgbackgrounds.com">SVGBackgrounds</a>
   </sub>
 </div>
+
+### Demo
+
+Live demo (still buggy though): https://lms-build.herokuapp.com<br>
+Use dummy credentials to login: (email) admin@admin.com (password) admin1234
 
 #### Note:
 

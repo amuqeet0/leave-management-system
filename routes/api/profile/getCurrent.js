@@ -1,17 +1,17 @@
-const Profile = require('../../../models/Profile');
+const Profile = require("../../../models/Profile");
 
 const getCurrent = (req, res) => {
   const errors = {};
   Profile.findOne({
-    user: req.user._id
+    user: req.user._id,
   })
     .populate({
-      path: 'leaveAllocation',
-      populate: { path: 'leaveTypesAllowed' }
+      path: "leaveAllocation",
+      populate: { path: "leaveTypesAllowed" },
     })
-    .then(profile => {
+    .then((profile) => {
       if (!profile) {
-        errors.noprofile = 'No profile found';
+        errors.noprofile = "No profile found";
         return res.status(404).json(errors);
       } else {
         return res.status(200).json(profile);
@@ -21,7 +21,7 @@ const getCurrent = (req, res) => {
         }); */
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(404).json(err);
     });

@@ -1,49 +1,49 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { body } = require('express-validator/check');
+const passport = require("passport");
+const { body } = require("express-validator");
 
-const { accountTypes } = require('../../../models/User');
-const { holidayTypes } = require('../../../models/Holiday');
-const addHoliday = require('./addHoliday');
-const getAllHolidays = require('./getAllHolidays');
-const updateHolidays = require('./updateHolidays');
-const { checkRole: permit } = require('../../utils');
+const { accountTypes } = require("../../../models/User");
+const { holidayTypes } = require("../../../models/Holiday");
+const addHoliday = require("./addHoliday");
+const getAllHolidays = require("./getAllHolidays");
+const updateHolidays = require("./updateHolidays");
+const { checkRole: permit } = require("../../utils");
 
 router.post(
-  '/add',
-  passport.authenticate('jwt', { session: false }),
+  "/add",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   [
-    body('holidayType')
+    body("holidayType")
       .exists()
-      .withMessage('Holiday type cannot be empty')
+      .withMessage("Holiday type cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Holiday type cannot be empty')
+      .withMessage("Holiday type cannot be empty")
       .isIn(Object.values(holidayTypes))
-      .withMessage('Invalid holiday type'),
-    body('date')
+      .withMessage("Invalid holiday type"),
+    body("date")
       .exists()
-      .withMessage('Date cannot be empty')
+      .withMessage("Date cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Date cannot be empty')
+      .withMessage("Date cannot be empty")
       .isISO8601()
-      .withMessage('Invalid Date'),
-    body('description')
+      .withMessage("Invalid Date"),
+    body("description")
       .exists()
-      .withMessage('Description cannot be empty')
+      .withMessage("Description cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Description cannot be empty')
+      .withMessage("Description cannot be empty"),
   ],
   addHoliday
 );
 
 router.patch(
-  '/edit',
-  passport.authenticate('jwt', { session: false }),
+  "/edit",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   /* [
     body('courseCodeSelect')
@@ -79,8 +79,8 @@ router.patch(
 );
 
 router.get(
-  '/get-all',
-  passport.authenticate('jwt', { session: false }),
+  "/get-all",
+  passport.authenticate("jwt", { session: false }),
   getAllHolidays
 );
 

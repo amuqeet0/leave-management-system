@@ -1,7 +1,7 @@
-const { validationResult } = require('express-validator/check');
-const bcrypt = require('bcryptjs');
+const { validationResult } = require("express-validator");
+const bcrypt = require("bcryptjs");
 
-const User = require('../../../models/User');
+const User = require("../../../models/User");
 
 const addAccount = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -10,15 +10,15 @@ const addAccount = (req, res) => {
   }
 
   User.findOne({
-    $or: [{ staffId: req.body.staffId }, { email: req.body.email }]
+    $or: [{ staffId: req.body.staffId }, { email: req.body.email }],
   })
-    .then(user => {
+    .then((user) => {
       if (user) {
         if (user.staffId === req.body.staffId) {
-          errors.staffId = 'Staff ID already exists';
+          errors.staffId = "Staff ID already exists";
           return res.status(400).json(errors);
         } else if (user.email === req.body.email) {
-          errors.email = 'Email already in use';
+          errors.email = "Email already in use";
           return res.status(400).json(errors);
         }
       } else {
@@ -34,12 +34,12 @@ const addAccount = (req, res) => {
               category: req.body.category,
               activated: true,
               password: hash,
-              staffType: req.body.staffType
+              staffType: req.body.staffType,
             });
             newUser
               .save()
-              .then(user => res.json('success'))
-              .catch(err => {
+              .then((user) => res.json("success"))
+              .catch((err) => {
                 console.log(err);
                 res.status(500).json(err);
               });
@@ -47,7 +47,7 @@ const addAccount = (req, res) => {
         });
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json(err);
     });

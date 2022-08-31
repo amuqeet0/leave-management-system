@@ -1,7 +1,7 @@
-const { validationResult } = require('express-validator/check');
-const mongoose = require('mongoose');
+const { validationResult } = require("express-validator");
+const mongoose = require("mongoose");
 
-const Timetable = require('../../../models/Timetable');
+const Timetable = require("../../../models/Timetable");
 
 const addUpdateTimetable = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -11,7 +11,7 @@ const addUpdateTimetable = (req, res) => {
 
   let { timetable } = req.body;
   if (!Array.isArray(timetable)) {
-    errors.timetable = 'Invalid timetable';
+    errors.timetable = "Invalid timetable";
     return res.status(400).json(errors);
   }
   let toAdd = [];
@@ -26,10 +26,10 @@ const addUpdateTimetable = (req, res) => {
           duration: hour.duration,
           course: tempCourseObj.courseCode,
           staff: tempCourseObj.handlingStaff,
-          staffRole: 'MAIN'
+          staffRole: "MAIN",
         });
         if (Array.isArray(tempCourseObj.additionalStaff)) {
-          tempCourseObj.additionalStaff.forEach(addtlStaff => {
+          tempCourseObj.additionalStaff.forEach((addtlStaff) => {
             toAdd.push({
               class: req.body.classId,
               classGroup: req.body.classGroupId,
@@ -38,10 +38,10 @@ const addUpdateTimetable = (req, res) => {
               duration: hour.duration,
               course: tempCourseObj.courseCode,
               staff: addtlStaff,
-              staffRole: 'ADDITIONAL'
+              staffRole: "ADDITIONAL",
             });
           });
-        } else if (typeof tempCourseObj.additionalStaff === 'string') {
+        } else if (typeof tempCourseObj.additionalStaff === "string") {
           toAdd.push({
             class: req.body.classId,
             classGroup: req.body.classGroupId,
@@ -50,35 +50,35 @@ const addUpdateTimetable = (req, res) => {
             duration: hour.duration,
             course: tempCourseObj.courseCode,
             staff: tempCourseObj.additionalStaff,
-            staffRole: 'ADDITIONAL'
+            staffRole: "ADDITIONAL",
           });
         }
       });
     });
   });
   let session = null;
-  mongoose.startSession().then(_session => {
+  mongoose.startSession().then((_session) => {
     session = _session;
     session.startTransaction();
     let bulkOps = [];
     bulkOps.push({
       deleteMany: {
-        filter: { class: req.body.classId }
-      }
+        filter: { class: req.body.classId },
+      },
     });
-    toAdd.forEach(item => {
+    toAdd.forEach((item) => {
       bulkOps.push({
         insertOne: {
-          document: item
-        }
+          document: item,
+        },
       });
     });
     Timetable.bulkWrite(bulkOps, { ordered: true, session })
       .then(() => {
         session.commitTransaction();
-        res.json('success');
+        res.json("success");
       })
-      .catch(err => {
+      .catch((err) => {
         session.abortTransaction();
         console.log(err);
       });

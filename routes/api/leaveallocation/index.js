@@ -1,33 +1,33 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { body } = require('express-validator/check');
+const passport = require("passport");
+const { body } = require("express-validator");
 
-const { staffTypes, accountTypes } = require('../../../models/User');
-const getAllLeaveAllocations = require('./getAllLeaveAllocations');
-const editLeaveAllocation = require('./editLeaveAllocation');
-const { checkRole: permit } = require('../../utils');
+const { staffTypes, accountTypes } = require("../../../models/User");
+const getAllLeaveAllocations = require("./getAllLeaveAllocations");
+const editLeaveAllocation = require("./editLeaveAllocation");
+const { checkRole: permit } = require("../../utils");
 
 router.get(
-  '/get-all',
-  passport.authenticate('jwt', { session: false }),
+  "/get-all",
+  passport.authenticate("jwt", { session: false }),
   getAllLeaveAllocations
 );
 
 router.patch(
-  '/edit',
-  passport.authenticate('jwt', { session: false }),
+  "/edit",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   [
-    body('staffTypeSelect')
+    body("staffTypeSelect")
       .not()
       .isEmpty()
-      .withMessage('Staff Type cannot be empty')
+      .withMessage("Staff Type cannot be empty")
       .isIn(Object.values(staffTypes))
-      .withMessage('Invalid Staff Type'),
-    body('leaveTypesAllowedUpdate')
+      .withMessage("Invalid Staff Type"),
+    body("leaveTypesAllowedUpdate")
       .exists()
-      .withMessage('Allowed leave types cannot be empty')
+      .withMessage("Allowed leave types cannot be empty"),
   ],
   editLeaveAllocation
 );

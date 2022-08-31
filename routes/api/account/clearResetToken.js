@@ -1,6 +1,6 @@
-const { validationResult } = require('express-validator/check');
+const { validationResult } = require("express-validator");
 
-const User = require('../../../models/User');
+const User = require("../../../models/User");
 
 const clearResetToken = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -9,26 +9,26 @@ const clearResetToken = (req, res) => {
   }
 
   User.findOne({
-    staffId: req.body.staffId
+    staffId: req.body.staffId,
   })
-    .then(user => {
+    .then((user) => {
       if (user) {
         user.set({
           resetPasswordExpires: -1,
-          resetPasswordToken: ''
+          resetPasswordToken: "",
         });
         user
           .save()
-          .then(res => res.status(200).json('Clear token success'))
-          .catch(err => {
+          .then((res) => res.status(200).json("Clear token success"))
+          .catch((err) => {
             console.log(err);
             res.status(500).json(err);
           });
       } else {
-        return res.status(400).json('user not found');
+        return res.status(400).json("user not found");
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(500).json(err);
     });

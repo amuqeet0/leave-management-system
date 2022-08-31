@@ -1,70 +1,70 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { body, query } = require('express-validator/check');
+const passport = require("passport");
+const { body, query } = require("express-validator");
 
-const { accountTypes } = require('../../../models/User');
-const uploadTimetable = require('./uploadTimetable');
-const addUpdateTimetable = require('./addUpdateTimetable');
-const getTimetable = require('./getTimetable');
-const getSlotsToAlternate = require('./getSlotsToAlternate');
-const getFreeSlots = require('./getFreeSlots');
-const { checkRole: permit } = require('../../utils');
+const { accountTypes } = require("../../../models/User");
+const uploadTimetable = require("./uploadTimetable");
+const addUpdateTimetable = require("./addUpdateTimetable");
+const getTimetable = require("./getTimetable");
+const getSlotsToAlternate = require("./getSlotsToAlternate");
+const getFreeSlots = require("./getFreeSlots");
+const { checkRole: permit } = require("../../utils");
 
 router.post(
-  '/upload',
-  passport.authenticate('jwt', { session: false }),
+  "/upload",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   uploadTimetable
 );
 
 router.post(
-  '/add',
-  passport.authenticate('jwt', { session: false }),
+  "/add",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   [
-    body('classId')
+    body("classId")
       .exists()
-      .withMessage('No class selected')
+      .withMessage("No class selected")
       .not()
       .isEmpty()
-      .withMessage('No class selected')
-      .custom(value => {
+      .withMessage("No class selected")
+      .custom((value) => {
         let re = /^[a-fA-F0-9]{24}$/;
         if (!re.test(value)) {
-          throw new Error('Invalid value');
+          throw new Error("Invalid value");
         }
         return true;
-      })
+      }),
   ],
   addUpdateTimetable
 );
 
 router.get(
-  '/get',
-  passport.authenticate('jwt', { session: false }),
+  "/get",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN, accountTypes.STAFF),
   [
-    query('classId')
+    query("classId")
       .exists()
-      .withMessage('No class selected')
+      .withMessage("No class selected")
       .not()
       .isEmpty()
-      .withMessage('No class selected')
-      .custom(value => {
+      .withMessage("No class selected")
+      .custom((value) => {
         let re = /^[a-fA-F0-9]{24}$/;
         if (!re.test(value)) {
-          throw new Error('Invalid value');
+          throw new Error("Invalid value");
         }
         return true;
-      })
+      }),
   ],
   getTimetable
 );
 
 router.post(
-  '/get-slots-to-alternate',
-  passport.authenticate('jwt', { session: false }),
+  "/get-slots-to-alternate",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.STAFF),
   /* [
     query('classId')
@@ -85,8 +85,8 @@ router.post(
 );
 
 router.post(
-  '/get-free-slots',
-  passport.authenticate('jwt', { session: false }),
+  "/get-free-slots",
+  passport.authenticate("jwt", { session: false }),
   /* [
     query('classId')
       .exists()

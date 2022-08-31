@@ -1,18 +1,18 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const { leaveTypes } = require('../data');
+const { leaveTypes } = require("../data");
 
-//create schema
+// ? create schema
 const ProfileSchema = new Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'users'
+      ref: "users",
     },
     staffId: {
       type: String,
-      required: true
+      required: true,
     },
     prevLogins: {
       type: [
@@ -23,19 +23,19 @@ const ProfileSchema = new Schema(
           browser: { type: String },
           browserVersion: { type: String },
           os: { type: String },
-          osVersion: { type: String }
-        }
-      ]
+          osVersion: { type: String },
+        },
+      ],
     },
     notifications: { type: Array, default: [] },
     cplCredits: {
       type: Number,
-      default: 0
+      default: 0,
     },
     leaveAllocation: {
       type: Schema.Types.ObjectId,
-      ref: 'leaveallocations',
-      require: true
+      ref: "leaveallocations",
+      require: true,
     },
     leaveAvailed: {
       type: [
@@ -43,18 +43,44 @@ const ProfileSchema = new Schema(
           leaveType: {
             type: String,
             enum: Object.values(leaveTypes),
-            required: true
+            required: true,
           },
           noOfDays: {
             type: Number,
             required: true,
-            default: 0
-          }
-        }
-      ]
-    }
+            default: 0,
+          },
+        },
+      ],
+    },
   },
   { minimize: false }
 );
 
-module.exports = Profile = mongoose.model('profiles', ProfileSchema);
+//create schema
+const UserSchema = new Schema(
+  {
+    pid: {
+      type: String,
+      required: true,
+      default: 1,
+    },
+    name: {
+      type: String,
+      required: true,
+      default: "cool name",
+    },
+    email: {
+      type: String,
+      required: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
+  },
+  { minimize: false }
+);
+
+module.exports = Profile = mongoose.model("profiles", ProfileSchema);
+module.exports = LMSUser = mongoose.model("LMSUser", UserSchema);

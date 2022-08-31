@@ -1,333 +1,327 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { body, query } = require('express-validator/check');
+const passport = require("passport");
+const { body, query } = require("express-validator");
 
-const { staffTypes, accountTypes } = require('../../../models/User');
-const selfUpdateAccount = require('./selfUpdateAccount');
-const selfUpdatePassword = require('./selfUpdatePassword');
-const activateAccount = require('./activateAccount');
-const clearResetToken = require('./clearResetToken');
-const getCurrent = require('./getCurrent');
-const login = require('./login');
-const resetPassword = require('./resetPassword');
-const resetPasswordRequest = require('./resetPasswordRequest');
-const checkResetToken = require('./checkResetToken');
-const getPasswordResetTime = require('./getPasswordResetTime');
-const addAccount = require('./addAccount');
-const addStaff = require('./addStaff');
-const { checkRole: permit } = require('../../utils');
+const { staffTypes, accountTypes } = require("../../../models/User");
+const selfUpdateAccount = require("./selfUpdateAccount");
+const selfUpdatePassword = require("./selfUpdatePassword");
+const activateAccount = require("./activateAccount");
+const clearResetToken = require("./clearResetToken");
+const getCurrent = require("./getCurrent");
+const login = require("./login");
+const resetPassword = require("./resetPassword");
+const resetPasswordRequest = require("./resetPasswordRequest");
+const checkResetToken = require("./checkResetToken");
+const getPasswordResetTime = require("./getPasswordResetTime");
+const addAccount = require("./addAccount");
+const addStaff = require("./addStaff");
+const { checkRole: permit } = require("../../utils");
 
 router.patch(
-  '/update-account',
-  passport.authenticate('jwt', { session: false }),
+  "/update-account",
+  passport.authenticate("jwt", { session: false }),
   [
-    body('email')
+    body("email")
       .exists()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .isEmail()
-      .withMessage('Enter a valid email address'),
-    body('name')
+      .withMessage("Enter a valid email address"),
+    body("name")
       .exists()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .isLength({ min: 2, max: 50 })
-      .withMessage('Name must be between 2 and 50 characters'),
-    body('designation')
+      .withMessage("Name must be between 2 and 50 characters"),
+    body("designation")
       .not()
       .isEmpty()
-      .withMessage('Designation cannot be empty')
+      .withMessage("Designation cannot be empty"),
   ],
   selfUpdateAccount
 );
 
 router.patch(
-  '/update-password',
-  passport.authenticate('jwt', { session: false }),
+  "/update-password",
+  passport.authenticate("jwt", { session: false }),
   [
-    body('currentpassword')
+    body("currentpassword")
       .exists()
-      .withMessage('Current Password cannot be empty')
+      .withMessage("Current Password cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Current Password cannot be empty'),
-    body('newpassword')
+      .withMessage("Current Password cannot be empty"),
+    body("newpassword")
       .exists()
-      .withMessage('New Password cannot be empty')
+      .withMessage("New Password cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('New Password cannot be empty')
+      .withMessage("New Password cannot be empty")
       .isLength({ min: 8 })
-      .withMessage('Password must be atleast 8 characters long')
+      .withMessage("Password must be atleast 8 characters long"),
   ],
   selfUpdatePassword
 );
 
 router.post(
-  '/activate',
+  "/activate",
   [
-    body('staffId')
+    body("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers'),
-    body('email')
+      .withMessage("Staff ID can only contain numbers"),
+    body("email")
       .exists()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .isEmail()
-      .withMessage('Enter a valid email address'),
-    body('password')
+      .withMessage("Enter a valid email address"),
+    body("password")
       .not()
       .isEmpty()
-      .withMessage('Password cannot be empty')
+      .withMessage("Password cannot be empty")
       .isLength({ min: 8 })
-      .withMessage('Password must be atleast 8 characters long'),
-    body('password2')
+      .withMessage("Password must be atleast 8 characters long"),
+    body("password2")
       .not()
       .isEmpty()
-      .withMessage('Confirm Password cannot be empty')
+      .withMessage("Confirm Password cannot be empty")
       .custom((value, { req }) => {
         if (value !== req.body.password) {
-          throw new Error('Passwords must match');
+          throw new Error("Passwords must match");
         }
         return true;
-      })
+      }),
   ],
   activateAccount
 );
 
 router.put(
-  '/clear-reset-token',
+  "/clear-reset-token",
   [
-    body('staffId')
+    body("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers')
+      .withMessage("Staff ID can only contain numbers"),
   ],
   clearResetToken
 );
 
 router.get(
-  '/get-current',
-  passport.authenticate('jwt', { session: false }),
+  "/get-current",
+  passport.authenticate("jwt", { session: false }),
   getCurrent
 );
 
 router.post(
-  '/login',
+  "/login",
   [
-    body('email')
+    body("email")
       .exists()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .isEmail()
-      .withMessage('Enter a valid email address'),
-    body('password')
+      .withMessage("Enter a valid email address"),
+    body("password")
       .exists()
-      .withMessage('Password cannot be empty')
+      .withMessage("Password cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Password cannot be empty')
+      .withMessage("Password cannot be empty"),
   ],
   login
 );
 
 router.post(
-  '/reset-password',
+  "/reset-password",
   [
-    body('staffId')
+    body("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers'),
-    body('password')
+      .withMessage("Staff ID can only contain numbers"),
+    body("password")
       .not()
       .isEmpty()
-      .withMessage('Password cannot be empty')
+      .withMessage("Password cannot be empty")
       .isLength({ min: 8 })
-      .withMessage('Password must be atleast 8 characters long'),
-    body('password2')
+      .withMessage("Password must be atleast 8 characters long"),
+    body("password2")
       .not()
       .isEmpty()
-      .withMessage('Confirm Password cannot be empty')
+      .withMessage("Confirm Password cannot be empty")
       .custom((value, { req }) => {
         if (value !== req.body.password) {
-          throw new Error('Passwords must match');
+          throw new Error("Passwords must match");
         }
         return true;
-      })
+      }),
   ],
   resetPassword
 );
 
 router.post(
-  '/reset-password-request',
+  "/reset-password-request",
   [
-    body('email')
+    body("email")
       .exists()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .isEmail()
-      .withMessage('Enter a valid email address')
+      .withMessage("Enter a valid email address"),
   ],
   resetPasswordRequest
 );
 
-router.get('/check-reset-token', checkResetToken);
+router.get("/check-reset-token", checkResetToken);
 
 router.get(
-  '/get-password-reset-time',
+  "/get-password-reset-time",
   [
-    query('staffId')
+    query("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers')
+      .withMessage("Staff ID can only contain numbers"),
   ],
   getPasswordResetTime
 );
 
 router.post(
-  '/add-account',
-  passport.authenticate('jwt', { session: false }),
+  "/add-account",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   [
-    body('staffId')
+    body("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers'),
-    body('email')
+      .withMessage("Staff ID can only contain numbers"),
+    body("email")
       .exists()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Email cannot be empty')
+      .withMessage("Email cannot be empty")
       .isEmail()
-      .withMessage('Enter a valid email address'),
-    body('name')
+      .withMessage("Enter a valid email address"),
+    body("name")
       .exists()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .isLength({ min: 2, max: 50 })
-      .withMessage('Name must be between 2 and 50 characters'),
-    body('designation')
+      .withMessage("Name must be between 2 and 50 characters"),
+    body("designation")
       .not()
       .isEmpty()
-      .withMessage('Designation cannot be empty'),
-    body('password')
+      .withMessage("Designation cannot be empty"),
+    body("password")
       .not()
       .isEmpty()
-      .withMessage('Password cannot be empty')
+      .withMessage("Password cannot be empty")
       .isLength({ min: 8 })
-      .withMessage('Password must be atleast 8 characters long'),
-    body('password2')
+      .withMessage("Password must be atleast 8 characters long"),
+    body("password2")
       .not()
       .isEmpty()
-      .withMessage('Confirm Password cannot be empty')
+      .withMessage("Confirm Password cannot be empty")
       .custom((value, { req }) => {
         if (value !== req.body.password) {
-          throw new Error('Passwords must match');
+          throw new Error("Passwords must match");
         }
         return true;
       }),
-    body('category')
+    body("category").not().isEmpty().withMessage("Category cannot be empty"),
+    body("staffType")
       .not()
       .isEmpty()
-      .withMessage('Category cannot be empty'),
-    body('staffType')
-      .not()
-      .isEmpty()
-      .withMessage('Staff Type cannot be empty')
+      .withMessage("Staff Type cannot be empty")
       .isIn(Object.values(staffTypes))
-      .withMessage('Invalid Staff Type'),
-    body('accountType')
+      .withMessage("Invalid Staff Type"),
+    body("accountType")
       .not()
       .isEmpty()
-      .withMessage('Account Type cannot be empty')
+      .withMessage("Account Type cannot be empty")
       .isIn(Object.values(accountTypes))
-      .withMessage('Invalid Account Type')
+      .withMessage("Invalid Account Type"),
   ],
   addAccount
 );
 
 router.post(
-  '/add-staff',
-  passport.authenticate('jwt', { session: false }),
+  "/add-staff",
+  passport.authenticate("jwt", { session: false }),
   permit(accountTypes.ADMIN),
   [
-    body('staffId')
+    body("staffId")
       .exists()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Staff ID cannot be empty')
+      .withMessage("Staff ID cannot be empty")
       .isLength({ min: 1 })
-      .withMessage('Staff ID must be atleast 1 character long')
+      .withMessage("Staff ID must be atleast 1 character long")
       .isNumeric()
-      .withMessage('Staff ID can only contain numbers'),
-    body('name')
+      .withMessage("Staff ID can only contain numbers"),
+    body("name")
       .exists()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .not()
       .isEmpty()
-      .withMessage('Name cannot be empty')
+      .withMessage("Name cannot be empty")
       .isLength({ min: 2, max: 50 })
-      .withMessage('Name must be between 2 and 50 characters'),
-    body('designation')
+      .withMessage("Name must be between 2 and 50 characters"),
+    body("designation")
       .not()
       .isEmpty()
-      .withMessage('Designation cannot be empty'),
-    body('category')
+      .withMessage("Designation cannot be empty"),
+    body("category").not().isEmpty().withMessage("Category cannot be empty"),
+    body("staffType")
       .not()
       .isEmpty()
-      .withMessage('Category cannot be empty'),
-    body('staffType')
-      .not()
-      .isEmpty()
-      .withMessage('Staff Type cannot be empty')
+      .withMessage("Staff Type cannot be empty")
       .isIn(Object.values(staffTypes))
-      .withMessage('Invalid Staff Type')
+      .withMessage("Invalid Staff Type"),
   ],
   addStaff
 );

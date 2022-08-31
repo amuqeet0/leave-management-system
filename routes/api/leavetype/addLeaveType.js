@@ -1,5 +1,5 @@
-const { validationResult } = require('express-validator/check');
-const LeaveType = require('../../../models/LeaveType');
+const { validationResult } = require("express-validator");
+const LeaveType = require("../../../models/LeaveType");
 
 const addLeaveType = (req, res) => {
   const errors = validationResult(req).formatWith(({ msg }) => msg);
@@ -8,22 +8,22 @@ const addLeaveType = (req, res) => {
   }
 
   LeaveType.findOne({ leaveType: req.body.leaveType })
-    .then(leaveType => {
+    .then((leaveType) => {
       if (leaveType) {
-        errors.leaveType = 'Leave type already exists';
+        errors.leaveType = "Leave type already exists";
         return res.status(400).json(errors);
       } else {
         const leaveObj = new LeaveType({
           leaveType: req.body.leaveType,
-          noOfDays: req.body.noOfDays
+          noOfDays: req.body.noOfDays,
         });
         leaveObj
           .save()
-          .then(data => res.status(200).json('success'))
-          .catch(err => console.log(err));
+          .then((data) => res.status(200).json("success"))
+          .catch((err) => console.log(err));
       }
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       return res.status(400).json(err);
     });

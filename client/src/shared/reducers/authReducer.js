@@ -1,10 +1,10 @@
-import { SET_CURRENT_USER, SET_CURRENT_USER_MERGE } from '../actionTypes';
-import { isEmpty } from '../utils';
+import { SET_CURRENT_USER, SET_CURRENT_USER_MERGE } from "../actionTypes";
+import { isEmpty } from "../utils";
 
 const initialState = {
-  isAuthenticated: false,
+  isAuthenticated: false, //TODO: set to false
   isLoaded: false,
-  user: {}
+  user: {},
 };
 
 const reducer = (state = initialState, action) => {
@@ -14,13 +14,13 @@ const reducer = (state = initialState, action) => {
         ...state,
         isAuthenticated: !isEmpty(action.payload),
         user: action.payload,
-        isLoaded: 'email' in action.payload
+        isLoaded: "email" in action.payload,
       };
     case SET_CURRENT_USER_MERGE:
       return {
         ...state,
         user: { ...state.user, ...action.payload },
-        isLoaded: true
+        isLoaded: true,
       };
     default:
       return state;

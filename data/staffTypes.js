@@ -1,12 +1,19 @@
+// const staffTypes = Object.freeze({
+//   RT: 'RT',
+//   RNT: 'RNT',
+//   TF: 'TF',
+//   NT: 'NT',
+//   RS30: 'RS30',
+//   RS20: 'RS20',
+//   RSO: 'RSO',
+//   OTH: 'OTH'
+// });
+
 const staffTypes = Object.freeze({
-  RT: 'RT',
-  RNT: 'RNT',
-  TF: 'TF',
-  NT: 'NT',
-  RS30: 'RS30',
-  RS20: 'RS20',
-  RSO: 'RSO',
-  OTH: 'OTH'
+  ADMIN: "ADMIN",
+  OFFICE: "OFFICE",
+  STAFF: "STAFF",
+  DEVELOPER: "DEVELOPER",
 });
 
 module.exports = staffTypes;

@@ -1,15 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const passport = require('passport');
-const { body } = require('express-validator/check');
+const passport = require("passport");
+const { body } = require("express-validator");
 
-const { accountTypes } = require('../../../models/User');
-const { leaveTypes } = require('../../../models/Leave');
-const getAlterations = require('./getAlterations');
-const setAlterationAsViewed = require('./setAlterationAsViewed');
-const setAlterationAccepted = require('./setAlterationAccepted');
-const setAlterationRejected = require('./setAlterationRejected');
-const { checkRole: permit } = require('../../utils');
+const { accountTypes } = require("../../../models/User");
+const { leaveTypes } = require("../../../models/Leave");
+const getAlterations = require("./getAlterations");
+const setAlterationAsViewed = require("./setAlterationAsViewed");
+const setAlterationAccepted = require("./setAlterationAccepted");
+const setAlterationRejected = require("./setAlterationRejected");
+const { checkRole: permit } = require("../../utils");
 
 /* router.post(
   '/add',
@@ -69,26 +69,26 @@ const { checkRole: permit } = require('../../utils');
 ); */
 
 router.get(
-  '/get-alterations',
-  passport.authenticate('jwt', { session: false }),
+  "/get-alterations",
+  passport.authenticate("jwt", { session: false }),
   getAlterations
 );
 
 router.get(
-  '/set-as-viewed',
-  passport.authenticate('jwt', { session: false }),
+  "/set-as-viewed",
+  passport.authenticate("jwt", { session: false }),
   setAlterationAsViewed
 );
 
 router.get(
-  '/set-accepted',
-  passport.authenticate('jwt', { session: false }),
+  "/set-accepted",
+  passport.authenticate("jwt", { session: false }),
   setAlterationAccepted
 );
 
 router.get(
-  '/set-rejected',
-  passport.authenticate('jwt', { session: false }),
+  "/set-rejected",
+  passport.authenticate("jwt", { session: false }),
   setAlterationRejected
 );
 

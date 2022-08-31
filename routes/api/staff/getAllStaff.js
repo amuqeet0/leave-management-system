@@ -1,13 +1,13 @@
-const { accountTypes } = require('../../../models/User');
-const User = require('../../../models/User');
+const { accountTypes } = require("../../../models/User");
+const User = require("../../../models/User");
 
 const getAllStaff = (req, res) => {
   User.find({ accountType: accountTypes.STAFF })
     .sort({ staffId: 1 })
-    .lean()
-    .then(users => {
+    .lean() // converts the mongoose document type to plain object but lose some mongoose editing functionality
+    .then((users) => {
       if (!users) {
-        errors.msg = 'No staff found';
+        errors.msg = "No staff found";
         return res.status(404).json();
       } else {
         let newUsers = users.map((item, index) => {
@@ -19,13 +19,13 @@ const getAllStaff = (req, res) => {
             category: item.category,
             email: item.email,
             staffType: item.staffType,
-            accountType: item.accountType
+            accountType: item.accountType,
           };
         });
         res.json(newUsers);
       }
     })
-    .catch(err => res.status(404).json(err));
+    .catch((err) => res.status(404).json(err));
 };
 
 module.exports = getAllStaff;
