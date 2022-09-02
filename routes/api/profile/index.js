@@ -1,49 +1,19 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
-const { body } = require("express-validator");
-
-const { accountTypes } = require("../../../data");
-const getCurrent = require("./getCurrent");
+// ? local
+const { getAllProfiles, getProfilesByUserId } = require("./getProfile");
 const addProfile = require("./addProfile");
-const setLoginAttempt = require("./setLoginAttempt");
-const markAllAsRead = require("./markAllAsRead");
-const markIndexAsRead = require("./markIndexAsRead");
-const { checkRole: permit } = require("../../utils");
+const editProfile = require("./editProfile");
+const deleteProfile = require("./deleteProfile");
 
-router.get("/", passport.authenticate("jwt", { session: false }), getCurrent);
+router.get("/", getAllProfiles);
 
-router.get(
-  "/mark-all-as-read",
-  passport.authenticate("jwt", { session: false }),
-  markAllAsRead
-);
+router.get("/profile/:userId", getProfilesByUserId);
 
-router.get(
-  "/mark-index-as-read",
-  passport.authenticate("jwt", { session: false }),
-  markIndexAsRead
-);
+router.post("/profile", addProfile);
 
-router.post(
-  "/add",
-  passport.authenticate("jwt", { session: false }),
-  permit(accountTypes.ADMIN),
-  [
-    body("staffId")
-      .exists()
-      .withMessage("Staff ID cannot be empty")
-      .not()
-      .isEmpty()
-      .withMessage("Staff ID cannot be empty")
-      .isLength({ min: 1 })
-      .withMessage("Staff ID must be atleast 1 character long")
-      .isNumeric()
-      .withMessage("Staff ID can only contain numbers"),
-  ],
-  addProfile
-);
+router.put("/profile/:userId", editProfile);
 
-router.post("/set-login-attempts", setLoginAttempt);
+router.delete("/profile/:userId", deleteProfile);
 
 module.exports = router;

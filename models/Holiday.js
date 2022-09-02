@@ -1,33 +1,39 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const { holidayTypes } = require('../data');
+const { holidayTypes } = require("../data");
 
 //create schema
 const HolidaySchema = new Schema(
   {
+    id: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     date: {
       type: Date,
-      required: true
+      required: true,
     },
     format: {
       type: String,
-      default: 'DD-MM-YYYY'
+      default: "DD-MM-YYYY",
+    },
+    title: {
+      type: String,
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     holidayType: {
       type: String,
       required: true,
-      default: holidayTypes.PUBLIC_HOLIDAY,
-      enum: Object.values(holidayTypes)
-    }
+      enum: ["PUBLIC", "OTHER"],
+    },
   },
   { minimize: false }
 );
 
-Object.assign(HolidaySchema.statics, { holidayTypes });
-
-module.exports = Holiday = mongoose.model('holidays', HolidaySchema);
+module.exports = Holiday = mongoose.model("holidays", HolidaySchema);

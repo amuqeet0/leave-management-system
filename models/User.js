@@ -3,29 +3,24 @@ const bcrypt = require("bcryptjs");
 const Schema = mongoose.Schema;
 const { accountTypes, staffTypes } = require("../data");
 
-//account type
+// ? account type
 //0 -- admin
 //1 -- office
 //2 -- staff
 
-//activated
+// ? activated
 //0 -- not activated
 //1 -- activated
 
-//staff type
-//0 -- regular teaching -- rt
-//1 -- regular non teaching -- rnt
-//2 -- teaching fellows -- tf
-//3 -- non teaching (no leave) -- nt
-//4 -- research scholars - 30 days -- rs30
-//5 -- research scholars - 20 days -- rs20
-//6 -- research scholars - others (6 days) -- rso
-//7 -- others -- oth
+// ? staff type
+// 0 -- ADMIN
+// 1 -- OFFICE
+// 2 -- STAFF
+// 3 -- DEVELOPER
 
-//create schema
 const UserSchema = new Schema(
   {
-    staffId: {
+    id: {
       type: String,
       unique: true,
       required: true,
@@ -38,10 +33,6 @@ const UserSchema = new Schema(
       type: String,
       required: true,
     },
-    category: {
-      type: String,
-      required: true,
-    },
     email: {
       type: String,
       default: "example@example.com",
@@ -50,6 +41,8 @@ const UserSchema = new Schema(
     password: {
       type: String,
       default: `${Math.floor(Math.random() * 90000) + 10000}`,
+      min: 8,
+      max: 16,
       required: true,
     },
     accountType: {
@@ -88,18 +81,24 @@ const UserSchema = new Schema(
 
 Object.assign(UserSchema.statics, { accountTypes, staffTypes });
 
-module.exports = User = mongoose.model("users", UserSchema);
+module.exports = User = mongoose.model("user", UserSchema);
 
-const admin = new User({
-  staffId: "101",
-  name: "admin",
-  designation: "ADMIN",
-  category: "idk",
-  email: "admin@admin.com",
-  password: bcrypt.hashSync("admin123", 10),
-  accountType: "ADMIN",
-  activated: true,
-  staffType: "ADMIN",
-});
-
-admin.save();
+// * creating admin
+(async function () {
+  if (await User.findOne({ id: "101" }).exec()) {
+    return;
+  } else {
+    const admin = new User({
+      id: "101",
+      name: "admin",
+      designation: "ADMIN",
+      category: "idk",
+      email: "admin@admin.com",
+      password: bcrypt.hashSync("admin123", 10),
+      accountType: "ADMIN",
+      activated: true,
+      staffType: "ADMIN",
+    });
+    return admin.save();
+  }
+})();

@@ -1,86 +1,41 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-
-const { leaveTypes } = require("../data");
+// const { leaveTypes } = require("../data");
 
 // ? create schema
 const ProfileSchema = new Schema(
   {
+    // profileId: { type: String, required: true },
     user: {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      unique: true,
+      ref: "User",
     },
-    staffId: {
-      type: String,
-      required: true,
-    },
-    prevLogins: {
-      type: [
-        {
-          attemptStatus: { type: String },
-          timestamp: { type: String },
-          ip: { type: String },
-          browser: { type: String },
-          browserVersion: { type: String },
-          os: { type: String },
-          osVersion: { type: String },
-        },
-      ],
-    },
-    notifications: { type: Array, default: [] },
-    cplCredits: {
-      type: Number,
-      default: 0,
-    },
-    leaveAllocation: {
+    department: {
       type: Schema.Types.ObjectId,
-      ref: "leaveallocations",
-      require: true,
+      ref: "Department",
     },
-    leaveAvailed: {
-      type: [
-        {
-          leaveType: {
-            type: String,
-            enum: Object.values(leaveTypes),
-            required: true,
-          },
-          noOfDays: {
-            type: Number,
-            required: true,
-            default: 0,
-          },
-        },
-      ],
-    },
-  },
-  { minimize: false }
-);
-
-//create schema
-const UserSchema = new Schema(
-  {
-    pid: {
+    address: {
       type: String,
-      required: true,
-      default: 1,
+      default: "",
     },
-    name: {
+    city: {
       type: String,
-      required: true,
-      default: "cool name",
+      default: "",
     },
-    email: {
-      type: String,
-      required: true,
+    country: { type: String, default: "" },
+    phone: { type: String, required: true, default: "" },
+    notifications: {
+      type: [String],
+      default: [],
     },
-    password: {
-      type: String,
-      required: true,
+    leaves: {
+      type: [Schema.Types.ObjectId],
+      ref: "Leave",
+      default: [],
     },
   },
   { minimize: false }
 );
 
 module.exports = Profile = mongoose.model("profiles", ProfileSchema);
-module.exports = LMSUser = mongoose.model("LMSUser", UserSchema);

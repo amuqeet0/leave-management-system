@@ -6,3 +6,8 @@ config/server.crt
 /uploads/*.*
 !/uploads/.gitkeep
 /docs-back
+
+routes-old
+models-old
+
+TODO.md

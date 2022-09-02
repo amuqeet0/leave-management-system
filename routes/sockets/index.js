@@ -7,6 +7,6 @@ exports.io = () => {
 
 exports.init = (server) => {
   io = socketio.listen(server);
-  require("../../config/socket")(io);
+  // require("../../config/socket")(io);
   return io;
 };

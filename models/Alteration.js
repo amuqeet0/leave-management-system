@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 //create schema
@@ -6,58 +6,54 @@ const AlterationSchema = new Schema({
   alterationId: {
     type: String,
     required: true,
-    unique: true
+    unique: true,
   },
   leaveId: {
-    type: String,
-    required: true
+    // type: mongoose.Schema.Types.ObjectId,
+    type: Schema.Types.ObjectId,
+    ref: "Leave",
+    required: true,
   },
   originalDate: {
     type: Date,
-    required: true
+    required: true,
   },
   originalHour: {
     type: Number,
-    required: true
+    // required: true,
   },
   alternationOption: {
+    // what's the purpose of this?
     type: String,
-    enum: ['POSTPONE', 'ALTERNATE'],
-    required: true
+    enum: ["POSTPONE", "ALTERNATE"],
+    required: true,
   },
+
   alterationDate: {
     type: Date,
-    required: true
-  },
-  alterationHour: {
-    type: Number,
-    required: true
+    // mind the dif timezone
+    // default: now(),
+    required: true,
   },
   originalStaff: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
-    required: true
+    ref: "users",
   },
   alternatingStaff: {
     type: Schema.Types.ObjectId,
-    ref: 'users',
-    required: true
-  },
-  class: {
-    type: Schema.Types.ObjectId,
-    ref: 'classes',
-    required: true
+    ref: "users",
   },
   status: {
     type: String,
-    enum: ['WAITING', 'ACCEPTED', 'REJECTED', 'EXPIRED', 'VIEWED'],
-    default: 'WAITING'
+    enum: ["WAITING", "ACCEPTED", "REJECTED", "EXPIRED", "VIEWED"],
+    default: "WAITING",
   },
+
   leaveApproved: {
     type: String,
-    enum: ['WAITING', 'ACCEPTED', 'REJECTED'],
-    default: 'WAITING'
-  }
+    enum: ["WAITING", "ACCEPTED", "REJECTED"],
+    default: "WAITING",
+  },
 });
 
-module.exports = Alteration = mongoose.model('alterations', AlterationSchema);
+module.exports = Alteration = mongoose.model("alterations", AlterationSchema);

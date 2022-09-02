@@ -8,3 +8,7 @@
 - Add cron jobs to check expiry of applications, validity of timetables, (probably timely backups), create notifications at intervals, etc.
 - Add report generation logic
 - Add redis caching
+
+/// --> Bugs/changed required <-- //
+
+- addLeave function in leaves api(produces an error)
