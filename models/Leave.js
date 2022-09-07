@@ -35,7 +35,8 @@ const LeaveSchema = new Schema({
   },
   applyDate: {
     type: Date,
-    // default: now(), // now() stores the server date(which can be located in dif region having dif timezone)
+    // now() stores the server date(which can be located in dif region having dif timezone)
+    // default: now(),
     required: true,
   },
   leaveDateFrom: {
@@ -51,7 +52,6 @@ const LeaveSchema = new Schema({
     required: true,
   },
   halfDaySession: {
-    // ! what's this for?
     type: Boolean,
     default: false,
   },

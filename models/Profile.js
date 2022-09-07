@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-// const { leaveTypes } = require("../data");
 
 // ? create schema
 const ProfileSchema = new Schema(
   {
-    // profileId: { type: String, required: true },
     user: {
       type: Schema.Types.ObjectId,
       unique: true,

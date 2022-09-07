@@ -9,7 +9,6 @@ const AlterationSchema = new Schema({
     unique: true,
   },
   leaveId: {
-    // type: mongoose.Schema.Types.ObjectId,
     type: Schema.Types.ObjectId,
     ref: "Leave",
     required: true,
